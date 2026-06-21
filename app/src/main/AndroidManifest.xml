@@ -2,7 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Sleep API — requer Google Play Services; solicitada em runtime no onboarding (API 29+) -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
+    <!-- WorkManager: permite reagendar workers após reinicialização do dispositivo -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Notificações de lembrete pré-sono (Android 13+, API 33+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
+        android:name=".HowSleepApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -11,18 +21,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HowSleep">
+
+        <!--
+            Referência explícita ao template de scaffolding até que o passo 14 da Fase 1
+            crie com.howsleep.app.MainActivity substituindo este placeholder.
+        -->
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.howsleep.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.HowSleep"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--
+            Desabilita o inicializador automático do WorkManager para que
+            HowSleepApplication.getWorkManagerConfiguration() seja usado no lugar.
+            Necessário sempre que Configuration.Provider é implementado na Application.
+        -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
     </application>
 
 </manifest>
