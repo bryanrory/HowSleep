@@ -329,33 +329,38 @@ com.howsleep.app/
 
 ## Fases de Implementação
 
-### Fase 1 — Foundation (atual)
+### Fase 1 — Foundation ✅ CONCLUÍDA
 Objetivo: app compila, navega, Room existe com todas as 5 entities, Hilt fiado, mock de sleep disponível.
 
-**Ordem estrita de implementação:**
-1. `app/build.gradle.kts` — todas as dependências com versões do `libs.versions.toml`
-2. `HowSleepApplication.kt` + `AndroidManifest.xml`
-3. `domain/util/TimeUtils.kt` — puro, zero Android
-4. `data/db/entity/` — 5 entities
-5. `data/db/dao/` — 5 DAOs (stubs de queries)
-6. `data/db/converter/DateConverters.kt`
-7. `data/db/HowSleepDatabase.kt`
-8. `data/di/DatabaseModule.kt`
-9. `sleep/SleepEventSource.kt` + `RealSleepEventSource.kt` + `MockSleepEventSource.kt` + `MockSleepWorker.kt`
-10. `data/di/SleepModule.kt`
-11. `data/di/NetworkModule.kt` (stub)
-12. `worker/di/WorkerModule.kt`
-13. `navigation/Screen.kt` + `navigation/NavGraph.kt`
-14. `MainActivity.kt`
-15. `ui/settings/SettingsScreen.kt` (stub com toggle DEBUG)
+**Commit:** `15b5c63` + `2930c0c` + `b81febb`
 
-### Fase 2 — Core Loop
+### Fase 2 — Core Loop ✅ CONCLUÍDA
 SleepReceiver → SleepSessionWorker → formulários Pré/Pós-Sono → Dashboard 7 noites.
 
-### Fase 3 — AI Integration
+**Commits:** `f5a0f87`, `ca5cad9`, `3d84e6c`, `0b6e0a6`
+
+### Fase 3 — AI Integration ✅ CONCLUÍDA
 PromptBuilder → AiCallWorker → LocalInsightEngine → StaticChallengeProvider → ChallengeScreen.
 
-### Fase 4 — Polish
+**Commit:** `aa8f098`
+
+**O que foi implementado:**
+- `domain/NightStateComputer.kt` — 9 estados + máquina de estados pura
+- `ai/ChallengeSuggestion.kt`, `AiChallengeResponse.kt` — data classes bridge e serialização
+- `ai/PromptBuilder.kt` — gera prompt user-content a partir de NightDataAggregate (zero Android)
+- `ai/AiResponseSanitizer.kt` — extrai JSON limpo da resposta do LLM
+- `ai/ChallengeValidator.kt` — valida campos com `require()` + trunca strings longas
+- `ai/LocalInsightEngine.kt` — engine de correlação hábito×sono (zero Android)
+- `ai/StaticChallengeProvider.kt` — 7 desafios hardcoded, seleção por `seed % 7`
+- `data/remote/api/AiChallengeApi.kt` — interface Retrofit `@POST v1/messages`
+- `data/remote/dto/` — `AiRequestDto`, `AiResponseDto`, `AiMessageDto`, `AiContentBlockDto`
+- `data/remote/mapper/AiResponseMapper.kt` — DTO → Entity com cálculo de `validUntilEpochDay`
+- `worker/AiCallWorker.kt` — fallback chain: API → LocalInsightEngine → StaticProvider
+- `worker/ChallengeEvaluationWorker.kt` — avalia hábito + outcome; finaliza desafio no último dia
+- `ui/challenge/` — `ChallengeUiState` + `ChallengeViewModel` + `ChallengeScreen` (badge de origem, progresso, dialog de abandono)
+- `navigation/NavGraph.kt` — rota Challenge conectada ao ícone ⭐ no Dashboard
+
+### Fase 4 — Polish (atual)
 Notificações, tendências (Vico), histórico de desafios, avaliação final automática.
 
 ---
