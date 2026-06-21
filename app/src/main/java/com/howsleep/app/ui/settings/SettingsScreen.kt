@@ -11,12 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,6 +45,28 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
         }
     }
 
+    if (uiState.showTimePicker) {
+        val timePickerState = rememberTimePickerState(
+            initialHour = uiState.reminderHour,
+            initialMinute = uiState.reminderMinute,
+            is24Hour = true,
+        )
+        TimePickerDialog(
+            title = { Text("Horário do lembrete") },
+            onDismissRequest = viewModel::onDismissTimePicker,
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.onReminderTimeConfirmed(timePickerState.hour, timePickerState.minute)
+                }) { Text("Confirmar") }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = viewModel::onDismissTimePicker) { Text("Cancelar") }
+            },
+        ) {
+            TimePicker(state = timePickerState)
+        }
+    }
+
     Scaffold(
         topBar = { TopAppBar(title = { Text("Configurações") }) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -51,7 +77,37 @@ fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {
+            Text(
+                text = "Lembretes",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text("Lembrete pré-sono")
+                Switch(
+                    checked = uiState.reminderEnabled,
+                    onCheckedChange = viewModel::onReminderToggled,
+                )
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            OutlinedButton(
+                onClick = viewModel::onShowTimePicker,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text("Horário do lembrete: %02d:%02d".format(uiState.reminderHour, uiState.reminderMinute))
+            }
+
             if (BuildConfig.DEBUG) {
+                Spacer(Modifier.height(24.dp))
+
                 Text(
                     text = "DEBUG",
                     style = MaterialTheme.typography.labelMedium,
