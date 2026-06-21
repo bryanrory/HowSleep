@@ -4,18 +4,37 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.howsleep.app.ui.dashboard.DashboardScreen
+import com.howsleep.app.ui.postsleep.PostSleepScreen
+import com.howsleep.app.ui.presleep.PreSleepScreen
 import com.howsleep.app.ui.settings.SettingsScreen
 
 @Composable
 fun HowSleepNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Settings.route,
+        startDestination = Screen.Dashboard.route,
     ) {
+        composable(Screen.Dashboard.route) {
+            DashboardScreen(
+                onNavigateToPreSleep = { navController.navigate(Screen.PreSleep.route) },
+                onNavigateToPostSleep = { navController.navigate(Screen.PostSleep.route) },
+                onNavigateToSettings = { navController.navigate(Screen.Settings.route) },
+            )
+        }
+        composable(Screen.PreSleep.route) {
+            PreSleepScreen(
+                onNavigateToDashboard = { navController.popBackStack() },
+            )
+        }
+        composable(Screen.PostSleep.route) {
+            PostSleepScreen(
+                onNavigateToDashboard = { navController.popBackStack() },
+            )
+        }
         composable(Screen.Settings.route) {
             SettingsScreen()
         }
-        // Fase 2: Dashboard, PreSleep, PostSleep
         // Fase 3: Challenge
         // Fase 4: Trends
     }
