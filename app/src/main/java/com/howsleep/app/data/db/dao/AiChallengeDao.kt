@@ -29,4 +29,7 @@ interface AiChallengeDao {
     // Verifica se já existe desafio gerado no epoch day atual para evitar duplicatas
     @Query("SELECT COUNT(*) FROM ai_challenge WHERE generated_at_utc_ms >= :dayStartUtcMs AND generated_at_utc_ms < :dayEndUtcMs")
     suspend fun countGeneratedBetween(dayStartUtcMs: Long, dayEndUtcMs: Long): Int
+
+    @Query("SELECT * FROM ai_challenge WHERE status != 'ACTIVE' ORDER BY generated_at_utc_ms DESC")
+    fun getHistory(): Flow<List<AiChallengeEntity>>
 }

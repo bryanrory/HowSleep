@@ -23,8 +23,7 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): HowSleepDatabase =
         Room.databaseBuilder(context, HowSleepDatabase::class.java, "howsleep.db")
-            // MVP: migração destrutiva aceitável; substituir por migrações explícitas pré-beta
-            .fallbackToDestructiveMigration()
+            .addMigrations(HowSleepDatabase.MIGRATION_1_2)
             .build()
 
     // Cada DAO tem @Provides próprio (não @Singleton) — Room gerencia a instância via a database

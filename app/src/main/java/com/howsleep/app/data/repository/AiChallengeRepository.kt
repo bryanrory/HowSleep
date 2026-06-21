@@ -21,4 +21,6 @@ interface AiChallengeRepository {
     ): Result<Unit>
 
     suspend fun hasChallengeGeneratedToday(): Boolean
+
+    fun getChallengeHistory(): Flow<List<AiChallengeEntity>>
 }

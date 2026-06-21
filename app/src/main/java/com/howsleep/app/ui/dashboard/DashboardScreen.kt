@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -42,6 +44,8 @@ fun DashboardScreen(
     onNavigateToPostSleep: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToChallenge: () -> Unit,
+    onNavigateToTrends: () -> Unit,
+    onNavigateToChallengeHistory: () -> Unit,
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -51,6 +55,12 @@ fun DashboardScreen(
             TopAppBar(
                 title = { Text("Últimas 7 noites") },
                 actions = {
+                    IconButton(onClick = onNavigateToTrends) {
+                        Icon(Icons.Default.ShowChart, contentDescription = "Tendências")
+                    }
+                    IconButton(onClick = onNavigateToChallengeHistory) {
+                        Icon(Icons.Default.History, contentDescription = "Histórico de desafios")
+                    }
                     IconButton(onClick = onNavigateToChallenge) {
                         Icon(Icons.Default.Star, contentDescription = "Desafio")
                     }
@@ -100,11 +110,11 @@ fun DashboardScreen(
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                item { } // espaço no topo
+                item { }
                 items(uiState.nights, key = { it.sleepEpochDay }) { night ->
                     NightCard(night = night, onPostSleepClick = onNavigateToPostSleep)
                 }
-                item { } // espaço no rodapé para o FAB
+                item { }
             }
         }
     }
