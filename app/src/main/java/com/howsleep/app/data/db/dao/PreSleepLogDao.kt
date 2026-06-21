@@ -20,6 +20,9 @@ interface PreSleepLogDao {
     @Query("SELECT * FROM pre_sleep_log ORDER BY sleep_epoch_day DESC LIMIT 1")
     fun getLatest(): Flow<PreSleepLogEntity?>
 
+    @Query("SELECT * FROM pre_sleep_log ORDER BY sleep_epoch_day DESC LIMIT :limit")
+    fun getLatestList(limit: Int): Flow<List<PreSleepLogEntity>>
+
     @Query("SELECT * FROM pre_sleep_log WHERE sleep_epoch_day BETWEEN :fromDay AND :toDay ORDER BY sleep_epoch_day ASC")
     suspend fun getRange(fromDay: Long, toDay: Long): List<PreSleepLogEntity>
 }
