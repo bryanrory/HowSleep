@@ -110,6 +110,9 @@ class AiChallengeRepositoryImpl @Inject constructor(
         return if (values.isEmpty()) 0f else values.average().toFloat()
     }
 
+    override fun getChallengeHistory(): Flow<List<AiChallengeEntity>> =
+        aiChallengeDao.getHistory()
+
     private fun todayEpochDay(): Long {
         val zone = ZoneId.of(TimeUtils.currentTimezoneId())
         return LocalDate.now(zone).toEpochDay()

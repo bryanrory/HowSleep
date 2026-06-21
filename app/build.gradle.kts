@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -116,8 +117,8 @@ dependencies {
     // Sleep API
     implementation(libs.play.services.location)
 
-    // Charts — descomentar na Fase 4
-    // implementation(libs.vico.compose.m3)
+    // Charts
+    implementation(libs.vico.compose.m3)
 
     // Test
     testImplementation(libs.junit)
