@@ -360,8 +360,27 @@ PromptBuilder → AiCallWorker → LocalInsightEngine → StaticChallengeProvide
 - `ui/challenge/` — `ChallengeUiState` + `ChallengeViewModel` + `ChallengeScreen` (badge de origem, progresso, dialog de abandono)
 - `navigation/NavGraph.kt` — rota Challenge conectada ao ícone ⭐ no Dashboard
 
-### Fase 4 — Polish (atual)
-Notificações, tendências (Vico), histórico de desafios, avaliação final automática.
+### Fase 4 — Polish (em progresso)
+Branch: `feat/fase-4-polish` — Commits: `48d4402`, `632a81c`, `35857fd`, `7673d37`, `01987ec`
+
+**O que foi implementado:**
+- `notification/NotificationHelper.kt` — canal `howsleep_reminders` + `sendPreSleepReminder()`
+- `notification/ReminderScheduler.kt` — `schedulePreSleepReminder(hour, minute)` via `PeriodicWorkRequest` 24h + `scheduleNightlyEvaluation()` às 06h
+- `worker/PreSleepReminderWorker.kt` — @HiltWorker, envia notificação pré-sono
+- `worker/NightlyEvaluationWorker.kt` — @HiltWorker, finaliza desafios expirados sem avaliação
+- `HowSleepApplication.kt` — injeta `NotificationHelper` e cria canais no `onCreate()`
+- `MainActivity.kt` — injeta `ReminderScheduler` e agenda avaliação noturna
+- `ui/settings/` — time picker Material3 para horário do lembrete (SettingsUiState + ViewModel + Screen)
+- `ui/trends/` — TrendsUiState + TrendsViewModel + TrendsScreen com gráficos Vico (duração + qualidade, 7/30 dias)
+- `ui/challenge/ChallengeHistoryScreen.kt` — lista desafios COMPLETED/ABANDONED/EXPIRED com status chip
+- `data/db/dao/AiChallengeDao.kt` — query `getHistory()` para não-ACTIVE
+- `data/repository/AiChallengeRepository.kt` — `getChallengeHistory(): Flow<List<AiChallengeEntity>>`
+- `navigation/` — rotas `ChallengeHistory` e `Trends` adicionadas; ícones ShowChart e History no Dashboard TopAppBar
+- `libs.versions.toml` + `build.gradle.kts` — Vico 2.0.1 habilitado + `material-icons-extended`
+
+**Notas de implementação:**
+- `ReminderScheduler` é injetado na `MainActivity` (não na `Application`) para evitar dependência circular com `WorkManager.getInstance()` antes do `workerFactory` estar disponível
+- `NotificationHelper` não depende de WorkManager — pode ser injetado diretamente na `Application`
 
 ---
 
