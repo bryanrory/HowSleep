@@ -88,7 +88,7 @@ app/src/main/java/com/howsleep/app/
 
 | Fase | Descrição | Status |
 |---|---|---|
-| Fase 1 | Foundation — Room, Hilt, navegação, mock do Sleep API | 🔧 Em andamento |
+| Fase 1 | Foundation — Room, Hilt, navegação, mock do Sleep API | ⏳ Pendente |
 | Fase 2 | Core Loop — formulários, detecção de sono, dashboard | ⏳ Pendente |
 | Fase 3 | AI Integration — PromptBuilder, LLM API, fallback local | ⏳ Pendente |
 | Fase 4 | Polish — notificações, tendências, histórico de desafios | ⏳ Pendente |

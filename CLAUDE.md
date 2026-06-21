@@ -442,6 +442,49 @@ Todos armazenados como `String` no Room (não como `Int`) para legibilidade e se
 
 ---
 
+## Convenções de Git
+
+### Branches
+- Todo desenvolvimento ativo ocorre em branch separada — **nunca commitar código diretamente em `main`**
+- Nomenclatura: `feat/fase-1-foundation`, `feat/fase-2-core-loop`, `fix/nome-do-bug`
+- `main` recebe apenas merges de fases concluídas ou correções críticas
+
+### Granularidade de commits — uma mudança lógica por commit
+- Nova tela criada + bug corrigido em outra → **dois commits separados**
+- Três entities Room criadas juntas → um único commit (mesma unidade lógica)
+- Nunca misturar feature + refactor + bugfix no mesmo commit
+
+### Prefixos obrigatórios nas mensagens
+| Prefixo | Quando usar |
+|---|---|
+| `feat:` | nova funcionalidade |
+| `fix:` | correção de bug |
+| `chore:` | configuração, dependências, build |
+| `docs:` | atualização de documentação |
+| `refactor:` | refatoração sem mudança de comportamento |
+| `test:` | adição ou correção de testes |
+
+**Nunca** adicionar `Co-Authored-By:` ou qualquer metadado de ferramenta nas mensagens.
+
+### Push
+- Ao final de cada sessão de trabalho ou feature concluída
+- Nunca `--force` em `main`
+
+---
+
+## Documentação como fonte de verdade
+
+Antes de implementar qualquer coisa, ler os documentos relevantes:
+- `CLAUDE.md` — regras arquiteturais e checklist
+- `docs/PRD.md` — regras de negócio e jornadas
+- `docs/DATA_CONTRACTS.md` — schema do banco e payloads de IA
+- `docs/STATE_MACHINE.md` — estados de uma noite e cenários de conflito
+- `docs/ARCHITECTURE_GUIDE.md` — padrões de código
+
+**Se a implementação divergir do que está documentado → atualizar o doc no mesmo commit ou no imediatamente seguinte. Nunca deixar dívida de documentação acumulando.**
+
+---
+
 ## Checklist de Revisão antes de cada Commit
 
 - [ ] Nenhum arquivo em `domain/` ou `ai/` importa `android.*` ou `androidx.*`
