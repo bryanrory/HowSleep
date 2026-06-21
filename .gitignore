@@ -3,6 +3,9 @@
 build/
 *.log
 
+# ===== Kotlin build cache =====
+.kotlin/
+
 # ===== Android build outputs =====
 *.apk
 *.aab

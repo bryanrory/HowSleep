@@ -13,8 +13,8 @@ class HowSleepApplication : Application(), Configuration.Provider {
     lateinit var workerFactory: HiltWorkerFactory
 
     // WorkManager usa esta configuração em vez do inicializador automático (desativado no manifest)
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
 }

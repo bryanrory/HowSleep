@@ -1,13 +1,10 @@
 package com.howsleep.app.data.di
 
 import com.howsleep.app.BuildConfig
-import com.jakewharton.retrofit.converter.kotlinxserialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,25 +26,15 @@ object NetworkModule {
                 }
             )
             .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)   // LLMs podem demorar até 60s
+            .readTimeout(60, TimeUnit.SECONDS)
             .build()
 
     @Provides
     @Singleton
-    fun provideJson(): Json = Json {
-        ignoreUnknownKeys = true    // resiliência: campos extras da API não quebram o parse
-        coerceInputValues = true    // resiliência: tipos coercíveis são convertidos
-        isLenient = false           // não aceita JSON malformado após sanitização
-    }
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, json: Json): Retrofit =
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl("https://api.anthropic.com/")
             .client(okHttpClient)
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            // kotlinx.serialization converter + AiChallengeApi adicionados na Fase 3
             .build()
-
-    // AiChallengeApi adicionado na Fase 3 (remote/api/AiChallengeApi.kt)
 }
