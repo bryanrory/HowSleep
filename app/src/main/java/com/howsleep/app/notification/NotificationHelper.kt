@@ -34,10 +34,7 @@ class NotificationHelper @Inject constructor(
     }
 
     fun sendPreSleepReminder() {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-            != PackageManager.PERMISSION_GRANTED
-        ) return
-
+        if (!hasNotificationPermission()) return
         val notification = NotificationCompat.Builder(context, CHANNEL_REMINDERS)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("Hora de registrar seus hábitos")
@@ -45,12 +42,28 @@ class NotificationHelper @Inject constructor(
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .build()
-
         NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_PRE_SLEEP, notification)
     }
+
+    fun sendPostSleepFollowUpReminder() {
+        if (!hasNotificationPermission()) return
+        val notification = NotificationCompat.Builder(context, CHANNEL_REMINDERS)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("Como foi sua noite?")
+            .setContentText("Você esqueceu de avaliar sua noite de ontem.")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+            .build()
+        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_POST_SLEEP_FOLLOWUP, notification)
+    }
+
+    private fun hasNotificationPermission(): Boolean =
+        ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+            PackageManager.PERMISSION_GRANTED
 
     companion object {
         const val CHANNEL_REMINDERS = "howsleep_reminders"
         private const val NOTIFICATION_ID_PRE_SLEEP = 1001
+        private const val NOTIFICATION_ID_POST_SLEEP_FOLLOWUP = 1002
     }
 }

@@ -4,6 +4,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.howsleep.app.worker.NightlyEvaluationWorker
+import com.howsleep.app.worker.PostSleepFollowUpWorker
 import com.howsleep.app.worker.PreSleepReminderWorker
 import java.time.Duration
 import java.time.LocalDateTime
@@ -56,10 +57,30 @@ class ReminderScheduler @Inject constructor(
         )
     }
 
+    fun schedulePostSleepFollowUp() {
+        val now = LocalDateTime.now()
+        var target = now.withHour(14).withMinute(0).withSecond(0).withNano(0)
+        if (!target.isAfter(now)) target = target.plusDays(1)
+        val initialDelayMs = Duration.between(now, target).toMillis()
+
+        val request = PeriodicWorkRequestBuilder<PostSleepFollowUpWorker>(1, TimeUnit.DAYS)
+            .setInitialDelay(initialDelayMs, TimeUnit.MILLISECONDS)
+            .addTag(TAG_POST_SLEEP_FOLLOWUP)
+            .build()
+
+        workManager.enqueueUniquePeriodicWork(
+            WORK_POST_SLEEP_FOLLOWUP,
+            ExistingPeriodicWorkPolicy.KEEP,
+            request,
+        )
+    }
+
     companion object {
         const val TAG_PRE_SLEEP_REMINDER = "pre_sleep_reminder"
         const val TAG_NIGHTLY_EVALUATION = "nightly_evaluation"
+        const val TAG_POST_SLEEP_FOLLOWUP = "post_sleep_followup"
         private const val WORK_PRE_SLEEP_REMINDER = "pre_sleep_reminder"
         private const val WORK_NIGHTLY_EVALUATION = "nightly_evaluation"
+        private const val WORK_POST_SLEEP_FOLLOWUP = "post_sleep_followup"
     }
 }
