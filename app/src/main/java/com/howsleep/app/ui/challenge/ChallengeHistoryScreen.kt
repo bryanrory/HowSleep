@@ -3,8 +3,10 @@ package com.howsleep.app.ui.challenge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.time.format.DateTimeFormatter
+import kotlin.math.abs
 
 private val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yy")
 
@@ -129,7 +133,49 @@ private fun ChallengeHistoryCard(item: ChallengeHistoryItem) {
                     label = { Text(sourceLabel(item.source), style = MaterialTheme.typography.labelSmall) },
                 )
             }
+
+            if (item.outcomeDeltaPercent != null && item.outcomeAverage != null) {
+                HorizontalDivider()
+                Spacer(Modifier.height(4.dp))
+                OutcomeDeltaRow(item)
+            }
         }
+    }
+}
+
+@Composable
+private fun OutcomeDeltaRow(item: ChallengeHistoryItem) {
+    val delta = item.outcomeDeltaPercent!!
+    val deltaSign = if (delta >= 0) "+" else ""
+    val deltaColor = if (delta >= 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+    val metricLabel = when (item.successMetricType) {
+        "SLEEP_DURATION" -> "Duração (h)"
+        "MOOD_SCORE" -> "Humor"
+        "ENERGY_LEVEL" -> "Energia"
+        "PERCEIVED_QUALITY" -> "Qualidade"
+        else -> item.successMetricType
+    }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column {
+            Text(
+                text = metricLabel,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = "Base %.1f  →  Resultado %.1f".format(item.baselineValue, item.outcomeAverage),
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        Text(
+            text = "$deltaSign${"%.1f".format(abs(delta))}%",
+            style = MaterialTheme.typography.titleSmall,
+            color = deltaColor,
+        )
     }
 }
 

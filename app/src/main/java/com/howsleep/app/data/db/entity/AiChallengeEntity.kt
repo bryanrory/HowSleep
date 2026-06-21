@@ -54,4 +54,8 @@ data class AiChallengeEntity(
 
     // "ACTIVE" | "COMPLETED" | "ABANDONED" | "EXPIRED"
     @ColumnInfo(name = "status") val status: String = "ACTIVE",
+
+    // Preenchidos no encerramento do desafio pelo ChallengeEvaluationWorker
+    @ColumnInfo(name = "outcome_average") val outcomeAverage: Float? = null,
+    @ColumnInfo(name = "outcome_delta_percent") val outcomeDeltaPercent: Float? = null,
 )

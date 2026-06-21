@@ -70,7 +70,7 @@ class ChallengeEvaluationWorker @AssistedInject constructor(
 
         // Se é o último dia do desafio, calcula o veredicto final
         if (todayEpochDay >= challenge.validUntilEpochDay) {
-            finalizeChallenge(challenge.id, challenge.durationDays)
+            finalizeChallenge(challenge)
         }
 
         return Result.success()
@@ -141,23 +141,35 @@ class ChallengeEvaluationWorker @AssistedInject constructor(
         return Pair(value, improved)
     }
 
-    private suspend fun finalizeChallenge(challengeId: Long, durationDays: Int) {
-        val allDays = challengeDayLogDao.getForChallengeOnce(challengeId)
+    private suspend fun finalizeChallenge(challenge: com.howsleep.app.data.db.entity.AiChallengeEntity) {
+        val allDays = challengeDayLogDao.getForChallengeOnce(challenge.id)
         val evaluated = allDays.filter { it.habitFollowed != null }
         if (evaluated.isEmpty()) return
 
-        val minDaysForEval = durationDays * 0.5
+        val minDaysForEval = challenge.durationDays * 0.5
         val followed = evaluated.count { it.habitFollowed == true }
         val adherenceRate = followed.toFloat() / evaluated.size
 
-        val challenge = aiChallengeDao.getActiveOnce() ?: return
+        val outcomeValues = allDays.mapNotNull { it.outcomeMetricValue }
+        val outcomeAverage = if (outcomeValues.isNotEmpty()) outcomeValues.average().toFloat() else null
+        val outcomeDeltaPercent = if (outcomeAverage != null && challenge.baselineValue != 0f) {
+            val raw = (outcomeAverage - challenge.baselineValue) / challenge.baselineValue * 100f
+            if (challenge.successMetricDirection == "BELOW") -raw else raw
+        } else null
+
         val newStatus = when {
             evaluated.size < minDaysForEval -> "EXPIRED"
             adherenceRate < 0.7f -> "ABANDONED"
             else -> "COMPLETED"
         }
         runCatching {
-            aiChallengeDao.update(challenge.copy(status = newStatus))
+            aiChallengeDao.update(
+                challenge.copy(
+                    status = newStatus,
+                    outcomeAverage = outcomeAverage,
+                    outcomeDeltaPercent = outcomeDeltaPercent,
+                )
+            )
         }.onFailure {
             Log.e(TAG, "Falha ao finalizar desafio", it)
         }

@@ -12,6 +12,9 @@ data class ChallengeHistoryItem(
     val validUntilDate: LocalDate,
     val habitToChange: String,
     val baselineValue: Float,
+    val outcomeAverage: Float?,
+    val outcomeDeltaPercent: Float?,
+    val successMetricType: String,
 )
 
 data class ChallengeHistoryUiState(

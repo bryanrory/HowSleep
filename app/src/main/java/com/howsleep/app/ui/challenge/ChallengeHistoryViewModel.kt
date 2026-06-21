@@ -32,6 +32,9 @@ class ChallengeHistoryViewModel @Inject constructor(
                         validUntilDate = LocalDate.ofEpochDay(entity.validUntilEpochDay),
                         habitToChange = entity.habitToChange,
                         baselineValue = entity.baselineValue,
+                        outcomeAverage = entity.outcomeAverage,
+                        outcomeDeltaPercent = entity.outcomeDeltaPercent,
+                        successMetricType = entity.successMetricType,
                     )
                 },
             )

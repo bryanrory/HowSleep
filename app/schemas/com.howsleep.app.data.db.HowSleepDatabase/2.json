@@ -1,0 +1,513 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "d95e957369ed2a8b98c6992306ea0f98",
+    "entities": [
+      {
+        "tableName": "sleep_session",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sleep_epoch_day` INTEGER NOT NULL, `sleep_start_utc_ms` INTEGER NOT NULL, `sleep_end_utc_ms` INTEGER NOT NULL, `timezone_id` TEXT NOT NULL, `total_duration_minutes` INTEGER NOT NULL, `confidence` INTEGER NOT NULL, `interruption_count` INTEGER NOT NULL, `light_sleep_minutes` INTEGER, `deep_sleep_minutes` INTEGER, `source` TEXT NOT NULL, `created_at_utc_ms` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepEpochDay",
+            "columnName": "sleep_epoch_day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepStartUtcMs",
+            "columnName": "sleep_start_utc_ms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepEndUtcMs",
+            "columnName": "sleep_end_utc_ms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timezoneId",
+            "columnName": "timezone_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalDurationMinutes",
+            "columnName": "total_duration_minutes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "confidence",
+            "columnName": "confidence",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interruptionCount",
+            "columnName": "interruption_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lightSleepMinutes",
+            "columnName": "light_sleep_minutes",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "deepSleepMinutes",
+            "columnName": "deep_sleep_minutes",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAtUtcMs",
+            "columnName": "created_at_utc_ms",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_sleep_session_sleep_epoch_day",
+            "unique": true,
+            "columnNames": [
+              "sleep_epoch_day"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_sleep_session_sleep_epoch_day` ON `${TABLE_NAME}` (`sleep_epoch_day`)"
+          }
+        ]
+      },
+      {
+        "tableName": "pre_sleep_log",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sleep_epoch_day` INTEGER NOT NULL, `filled_at_utc_ms` INTEGER NOT NULL, `timezone_id` TEXT NOT NULL, `caffeine_mg` INTEGER, `caffeine_last_intake_utc_ms` INTEGER, `caffeine_last_intake_local_hour` INTEGER, `screen_time_minutes_2h_before` INTEGER, `stress_level` INTEGER NOT NULL, `last_meal_utc_ms` INTEGER, `last_meal_type` TEXT, `exercise_done` INTEGER NOT NULL, `exercise_intensity` TEXT, `exercise_minutes_before_bed` INTEGER, `alcohol_units` REAL, `notes` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepEpochDay",
+            "columnName": "sleep_epoch_day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "filledAtUtcMs",
+            "columnName": "filled_at_utc_ms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timezoneId",
+            "columnName": "timezone_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "caffeineMg",
+            "columnName": "caffeine_mg",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "caffeineLastIntakeUtcMs",
+            "columnName": "caffeine_last_intake_utc_ms",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "caffeineLastIntakeLocalHour",
+            "columnName": "caffeine_last_intake_local_hour",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "screenTimeMinutes2hBefore",
+            "columnName": "screen_time_minutes_2h_before",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "stressLevel",
+            "columnName": "stress_level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastMealUtcMs",
+            "columnName": "last_meal_utc_ms",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "lastMealType",
+            "columnName": "last_meal_type",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "exerciseDone",
+            "columnName": "exercise_done",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exerciseIntensity",
+            "columnName": "exercise_intensity",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "exerciseMinutesBeforeBed",
+            "columnName": "exercise_minutes_before_bed",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "alcoholUnits",
+            "columnName": "alcohol_units",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_pre_sleep_log_sleep_epoch_day",
+            "unique": true,
+            "columnNames": [
+              "sleep_epoch_day"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_pre_sleep_log_sleep_epoch_day` ON `${TABLE_NAME}` (`sleep_epoch_day`)"
+          }
+        ]
+      },
+      {
+        "tableName": "post_sleep_log",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sleep_epoch_day` INTEGER NOT NULL, `filled_at_utc_ms` INTEGER NOT NULL, `timezone_id` TEXT NOT NULL, `mood_score` INTEGER NOT NULL, `energy_level` INTEGER NOT NULL, `perceived_quality` INTEGER NOT NULL, `perceived_duration_hours` REAL, `morning_grogginess_minutes` INTEGER, `dream_recall` INTEGER NOT NULL, `headache` INTEGER NOT NULL, `notes` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepEpochDay",
+            "columnName": "sleep_epoch_day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "filledAtUtcMs",
+            "columnName": "filled_at_utc_ms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timezoneId",
+            "columnName": "timezone_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "moodScore",
+            "columnName": "mood_score",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "energyLevel",
+            "columnName": "energy_level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "perceivedQuality",
+            "columnName": "perceived_quality",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "perceivedDurationHours",
+            "columnName": "perceived_duration_hours",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "morningGrogginessMinutes",
+            "columnName": "morning_grogginess_minutes",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "dreamRecall",
+            "columnName": "dream_recall",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "headache",
+            "columnName": "headache",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_post_sleep_log_sleep_epoch_day",
+            "unique": true,
+            "columnNames": [
+              "sleep_epoch_day"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_post_sleep_log_sleep_epoch_day` ON `${TABLE_NAME}` (`sleep_epoch_day`)"
+          }
+        ]
+      },
+      {
+        "tableName": "ai_challenge",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `generated_at_utc_ms` INTEGER NOT NULL, `valid_from_epoch_day` INTEGER NOT NULL, `valid_until_epoch_day` INTEGER NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `habit_to_change` TEXT NOT NULL, `habit_change_instruction` TEXT NOT NULL, `duration_days` INTEGER NOT NULL, `success_metric_type` TEXT NOT NULL, `success_metric_target` REAL NOT NULL, `success_metric_direction` TEXT NOT NULL, `baseline_value` REAL NOT NULL, `source` TEXT NOT NULL, `prompt_context_json` TEXT, `raw_ai_response_json` TEXT, `status` TEXT NOT NULL, `outcome_average` REAL, `outcome_delta_percent` REAL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "generatedAtUtcMs",
+            "columnName": "generated_at_utc_ms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "validFromEpochDay",
+            "columnName": "valid_from_epoch_day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "validUntilEpochDay",
+            "columnName": "valid_until_epoch_day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitToChange",
+            "columnName": "habit_to_change",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitChangeInstruction",
+            "columnName": "habit_change_instruction",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "durationDays",
+            "columnName": "duration_days",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "successMetricType",
+            "columnName": "success_metric_type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "successMetricTarget",
+            "columnName": "success_metric_target",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "successMetricDirection",
+            "columnName": "success_metric_direction",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "baselineValue",
+            "columnName": "baseline_value",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "promptContextJson",
+            "columnName": "prompt_context_json",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "rawAiResponseJson",
+            "columnName": "raw_ai_response_json",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "outcomeAverage",
+            "columnName": "outcome_average",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "outcomeDeltaPercent",
+            "columnName": "outcome_delta_percent",
+            "affinity": "REAL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "challenge_day_log",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `challenge_id` INTEGER NOT NULL, `sleep_epoch_day` INTEGER NOT NULL, `habit_followed` INTEGER, `habit_followed_evidence` TEXT, `outcome_metric_value` REAL, `outcome_improved` INTEGER, FOREIGN KEY(`challenge_id`) REFERENCES `ai_challenge`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "challengeId",
+            "columnName": "challenge_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepEpochDay",
+            "columnName": "sleep_epoch_day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "habitFollowed",
+            "columnName": "habit_followed",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "habitFollowedEvidence",
+            "columnName": "habit_followed_evidence",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "outcomeMetricValue",
+            "columnName": "outcome_metric_value",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "outcomeImproved",
+            "columnName": "outcome_improved",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_challenge_day_log_challenge_id",
+            "unique": false,
+            "columnNames": [
+              "challenge_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_challenge_day_log_challenge_id` ON `${TABLE_NAME}` (`challenge_id`)"
+          },
+          {
+            "name": "index_challenge_day_log_challenge_id_sleep_epoch_day",
+            "unique": true,
+            "columnNames": [
+              "challenge_id",
+              "sleep_epoch_day"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_challenge_day_log_challenge_id_sleep_epoch_day` ON `${TABLE_NAME}` (`challenge_id`, `sleep_epoch_day`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "ai_challenge",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "challenge_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd95e957369ed2a8b98c6992306ea0f98')"
+    ]
+  }
+}
