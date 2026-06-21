@@ -1,10 +1,14 @@
 package com.howsleep.app.data.di
 
 import com.howsleep.app.BuildConfig
+import com.howsleep.app.data.remote.api.AiChallengeApi
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -31,10 +35,23 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
+    fun provideJson(): Json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+        isLenient = false
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient, json: Json): Retrofit =
         Retrofit.Builder()
             .baseUrl("https://api.anthropic.com/")
             .client(okHttpClient)
-            // kotlinx.serialization converter + AiChallengeApi adicionados na Fase 3
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
+
+    @Provides
+    @Singleton
+    fun provideAiChallengeApi(retrofit: Retrofit): AiChallengeApi =
+        retrofit.create(AiChallengeApi::class.java)
 }

@@ -1,5 +1,7 @@
 package com.howsleep.app.data.repository.impl
 
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.howsleep.app.data.db.dao.PostSleepLogDao
 import com.howsleep.app.data.db.dao.PreSleepLogDao
 import com.howsleep.app.data.db.dao.SleepSessionDao
@@ -8,6 +10,8 @@ import com.howsleep.app.data.db.entity.PreSleepLogEntity
 import com.howsleep.app.data.repository.HabitLogRepository
 import com.howsleep.app.domain.model.NightDataAggregate
 import com.howsleep.app.domain.util.TimeUtils
+import com.howsleep.app.worker.AiCallWorker
+import com.howsleep.app.worker.ChallengeEvaluationWorker
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -19,6 +23,7 @@ class HabitLogRepositoryImpl @Inject constructor(
     private val preSleepLogDao: PreSleepLogDao,
     private val postSleepLogDao: PostSleepLogDao,
     private val sleepSessionDao: SleepSessionDao,
+    private val workManager: WorkManager,
 ) : HabitLogRepository {
 
     override suspend fun savePreSleepLog(
@@ -40,7 +45,6 @@ class HabitLogRepositoryImpl @Inject constructor(
         val zone = ZoneId.of(timezoneId)
         val epochDayDate = LocalDate.ofEpochDay(epochDay)
 
-        // Reconstrói timestamps UTC a partir da hora local no dia do sleep_epoch_day
         val caffeineUtcMs = caffeineLastIntakeLocalHour?.let { hour ->
             LocalDateTime.of(epochDayDate, LocalTime.of(hour, 0))
                 .atZone(zone).toInstant().toEpochMilli()
@@ -97,6 +101,10 @@ class HabitLogRepositoryImpl @Inject constructor(
             notes = notes?.ifBlank { null },
         )
         postSleepLogDao.upsert(entity)
+
+        // Dispara os workers de IA e avaliação de desafio
+        workManager.enqueue(OneTimeWorkRequestBuilder<AiCallWorker>().build())
+        workManager.enqueue(OneTimeWorkRequestBuilder<ChallengeEvaluationWorker>().build())
     }
 
     override suspend fun getPreSleepLog(epochDay: Long): PreSleepLogEntity? =
