@@ -22,12 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HowSleep">
 
-        <!--
-            Referência explícita ao template de scaffolding até que o passo 14 da Fase 1
-            crie com.howsleep.app.MainActivity substituindo este placeholder.
-        -->
         <activity
-            android:name="com.example.howsleep.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.HowSleep"
